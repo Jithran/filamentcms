@@ -7,8 +7,11 @@ use App\Filament\Resources\GoalResource\RelationManagers;
 use App\Models\Goal;
 use Closure;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -27,22 +30,34 @@ class GoalResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Group::make([
-                    TextInput::make('name')
-                        ->autofocus()
-                        ->rules('required', 'max:255')
-                        ->reactive()->afterStateUpdated(function (Closure $set, $state) {
-                            $set('slug', Str::slug($state));
-                        }),
-                    Textarea::make('description'),
-                ]),
-                Forms\Components\Group::make([
-                    TextInput::make('slug')
-                        ->required(),
+                Group::make([
+                    Forms\Components\Card::make()->schema([
+                        TextInput::make('name')
+                            ->autofocus()
+                            ->rules('required', 'max:255')
+                            ->reactive()->afterStateUpdated(function (Closure $set, $state) {
+                                $set('slug', Str::slug($state));
+                            }),
+                        TextInput::make('slug')
+                            ->required(),
 
-                    Forms\Components\DatePicker::make('due_date')
-                        ->required(),
-                    Forms\Components\Toggle::make('is_completed'),
+                        DatePicker::make('due_date')
+                            ->required(),
+                        Toggle::make('is_completed'),
+                    ]),
+                ]),
+                Group::make([
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                        ->rules('required', 'image', 'max:1024')
+                        ->maxFiles(1)
+                        ->maxSize(2048)
+                        ->acceptedFileTypes(['image/*'])
+                        ->helperText('Upload an image for this goal. (max 2MB)')
+                        ->collection('groups'),
+                ]),
+
+                Forms\Components\Card::make()->schema([
+                    Forms\Components\RichEditor::make('description'),
                 ]),
 
 
