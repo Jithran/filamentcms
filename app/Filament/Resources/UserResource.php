@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -44,6 +45,9 @@ class UserResource extends Resource
                         ->required(fn($record): bool => is_null($record?->id))
                         ->minLength(8)
                         ->dehydrated(false),
+                    Toggle::make('has_filament_access')
+                        ->label('Has Filament Access')
+                        ->helperText('If this is checked, the user will be able to access the Filament admin panel.'),
                 ]),
             ]);
     }
