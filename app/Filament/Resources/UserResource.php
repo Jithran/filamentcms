@@ -28,26 +28,38 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Card::make()->schema([
-                    Forms\Components\TextInput::make('name')
-                        ->autofocus()
-                        ->required(),
-                    Forms\Components\TextInput::make('email')
-                        ->required(),
-                    Forms\Components\TextInput::make('password')
-                        ->type('password')
-                        ->required(fn($record): bool => is_null($record?->id))
-                        ->minLength(8)
-                        ->same('password_confirmation')
-                        ->dehydrateStateUsing(fn($state): string => Hash::make($state))
-                        ->dehydrated(fn($state) => filled($state)),
-                    Forms\Components\TextInput::make('password_confirmation')
-                        ->type('password')
-                        ->required(fn($record): bool => is_null($record?->id))
-                        ->minLength(8)
-                        ->dehydrated(false),
-                    Toggle::make('has_filament_access')
-                        ->label('Has Filament Access')
-                        ->helperText('If this is checked, the user will be able to access the Filament admin panel.'),
+                    Forms\Components\Card::make()->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->autofocus()
+                            ->required(),
+                        Forms\Components\TextInput::make('email')
+                            ->required(),
+                        Forms\Components\TextInput::make('password')
+                            ->type('password')
+                            ->required(fn($record): bool => is_null($record?->id))
+                            ->minLength(8)
+                            ->same('password_confirmation')
+                            ->dehydrateStateUsing(fn($state): string => Hash::make($state))
+                            ->dehydrated(fn($state) => filled($state)),
+                        Forms\Components\TextInput::make('password_confirmation')
+                            ->type('password')
+                            ->required(fn($record): bool => is_null($record?->id))
+                            ->minLength(8)
+                            ->dehydrated(false),
+                        Toggle::make('has_filament_access')
+                            ->label('Has Filament Access')
+                            ->helperText('If this is checked, the user will be able to access the Filament admin panel.'),
+
+                    ]),
+                ]),
+                Forms\Components\Card::make()->schema([
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('avatar')
+                        ->rules('required', 'image', 'max:1024')
+                        ->maxFiles(1)
+                        ->maxSize(2048)
+                        ->acceptedFileTypes(['image/*'])
+                        ->helperText('Upload an image for this user. (max 2MB)')
+                        ->collection('users'),
                 ]),
             ]);
     }
