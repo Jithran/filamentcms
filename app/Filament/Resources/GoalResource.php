@@ -3,21 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\GoalResource\Pages;
-use App\Filament\Resources\GoalResource\RelationManagers;
 use App\Models\Goal;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class GoalResource extends Resource
@@ -41,8 +37,7 @@ class GoalResource extends Resource
                         TextInput::make('slug')
                             ->required(),
 
-                        DatePicker::make('due_date')
-                            ->required(),
+                        DatePicker::make('due_date'),
                         Toggle::make('is_completed'),
                     ]),
                 ]),
